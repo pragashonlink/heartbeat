@@ -1,5 +1,7 @@
 require "heartbeat"
 require "heartbeat/check"
+require "heartbeat/request"
+require "support/request"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
