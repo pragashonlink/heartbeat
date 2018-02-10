@@ -1,4 +1,5 @@
-require "bundler/setup"
+require "heartbeat"
+require "heartbeat/check"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
