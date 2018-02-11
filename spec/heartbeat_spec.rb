@@ -1,19 +1,29 @@
 RSpec.describe Heartbeat, "check average site performacne" do
+  let (:url) { "https://t.lever-analytics.com/email-link?dest=https://gitlab.com&eid=17b181e8-271a-4c7e-a909-931a1abe2590&idx=0&token=g_K_AKBfcUMc5kjRdDzmtS2yHtY" }
+
   context "when the site is available" do
     it "should return a numeric value representing the time" do
-      url = "https://t.lever-analytics.com/email-link?dest=https://gitlab.com&eid=17b181e8-271a-4c7e-a909-931a1abe2590&idx=0&token=g_K_AKBfcUMc5kjRdDzmtS2yHtY"
-
-      heartbeat = Heartbeat::Check.new(Spec::Request)
-
-      expect(heartbeat.pulse(url)).to be_a(Numeric)
+      time = Heartbeat::Check.new(url, Spec::Request).pulse
+      expect(time).to be_a(Numeric)
     end
 
     it "should return the time taken to access the site" do
-      url = "https://t.lever-analytics.com/email-link?dest=https://gitlab.com&eid=17b181e8-271a-4c7e-a909-931a1abe2590&idx=0&token=g_K_AKBfcUMc5kjRdDzmtS2yHtY"
+      time = Heartbeat::Check.new(url, Spec::Request).pulse
+      expect(time.to_i).to eq(1)
+    end
+  end
 
-      heartbeat = Heartbeat::Check.new(Spec::Request)
+  context "when passed with different interval option" do
+    it "should return the time taken to access the site" do
+      time = Heartbeat::Check.new(url, Spec::Request, {interval: 2}).pulse
+      expect(time.to_i).to eq(1)
+    end
+  end
 
-      expect(heartbeat.pulse(url)).to eq(5)
-    end   
+  context "when passed with different time_to_poll_in_seonds option" do
+    it "should return the time taken to access the site" do
+      time = Heartbeat::Check.new(url, Spec::Request, {time_to_poll: 30}).pulse
+      expect(time.to_i).to eq(1)
+    end
   end
 end
