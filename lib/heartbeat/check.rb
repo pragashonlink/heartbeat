@@ -43,14 +43,13 @@ module Heartbeat
       number_of_request  = 0
       
       begin
-
         send do |request_seconds|
           total_exec_time     += request_seconds + interval
           total_request_time  += request_seconds          
         end
 
         number_of_request += 1
-      end while has_time?(total_exec_time)
+      end while send_next_request?(total_exec_time)
 
       total_request_time / number_of_request
     end
@@ -75,7 +74,7 @@ module Heartbeat
         @options[:time_to_poll] || 60
       end
 
-      def has_time?(total_exec_time)
+      def send_next_request?(total_exec_time)
         time_to_poll > total_exec_time
       end
   end
