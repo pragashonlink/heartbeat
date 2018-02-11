@@ -26,4 +26,11 @@ RSpec.describe Heartbeat, "check average site performacne" do
       expect(time.to_i).to eq(1)
     end
   end
+
+  context "when passed with options as nil" do
+    it "should return the time taken to access the site" do
+      time = Heartbeat::Check.new(url, nil, Spec::Request).pulse
+      expect(time.to_i).to eq(1)
+    end
+  end
 end

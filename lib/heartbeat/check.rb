@@ -30,7 +30,7 @@ module Heartbeat
     def initialize(url, options = {}, request = Request)
       @url     = url      
       @options = options || {}
-      @request = request || Request      
+      @request = request || Request
     end
 
     def pulse
@@ -39,15 +39,12 @@ module Heartbeat
       number_of_request  = 0
       
       begin
-        start_time = Time.now
 
-        @request.send(@url)
+        send do |request_seconds|
+          total_exec_time     += request_seconds + interval
+          total_request_time  += request_seconds          
+        end
 
-        request_seconds      = (Time.now - start_time).to_i
-        total_exec_time     += request_seconds + interval
-        total_request_time  += request_seconds
-
-        sleep(interval)
         number_of_request += 1
       end while has_time?(total_exec_time)
 
@@ -55,6 +52,17 @@ module Heartbeat
     end
 
     private
+      def send
+        start_time = Time.now
+
+        @request.send(@url)
+
+        request_seconds = (Time.now - start_time).to_i
+        sleep(interval)
+
+        yield request_seconds
+      end
+
       def interval
         @options[:interval] || 10
       end
