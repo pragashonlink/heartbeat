@@ -14,23 +14,27 @@
 #
 #   *. CustomRequest
 #   The custom request dispatcher should have a class method named send that accepts a url
-#
-# Instantiate with a custom request dispatcher and options
-#
-#   Heartbeat::Check.new(Url, {interval: 5, time_to_poll: 25})
-# 
-#   *. Options[:interval]
-#   The time interval between each request. The execution will sleep at this point
-#   
-#   *. Options[:time_to_poll]
-#   For how long should the requests be made
-# 
 module Heartbeat
   class Check
-    def initialize(url, options = {}, request = Request)
+    def initialize(url, request = Request)
       @url     = url      
-      @options = options || {}
+      @options = {}
       @request = request || Request
+    end
+
+    # Instantiate with a custom request dispatcher and options
+    #
+    #   Heartbeat::Check.new(Url).set_options({interval: 5, time_to_poll: 25})
+    # 
+    #   *. Options[:interval]
+    #   The time interval between each request. The execution will sleep at this point
+    #   
+    #   *. Options[:time_to_poll]
+    #   For how long should the requests be made
+    def set_options(options)
+      @options.merge!(options || {})
+
+      self
     end
 
     def pulse
