@@ -1,9 +1,36 @@
+# The main class of the library which should be called by passing in the following parameters
+#
+# Instantiate the Check class:
+#
+#   Heartbeat::Check.new(Url)
+#
+#   *. Url
+#   The Url whose response time should be tested. For an example you could pass 
+#   https://t.lever-analytics.com/email-link?dest=https://gitlab.com&eid=17b181e8-271a-4c7e-a909-931a1abe2590&idx=0&token=g_K_AKBfcUMc5kjRdDzmtS2yHtY
+#
+# Instantiate with a custom request dispatcher
+# 
+#   Heartbeat::Check.new(Url, {}, CustomRequest)
+#
+#   *. CustomRequest
+#   The custom request dispatcher should have a class method named send that accepts a url
+#
+# Instantiate with a custom request dispatcher and options
+#
+#   Heartbeat::Check.new(Url, {interval: 5, time_to_poll: 25})
+# 
+#   *. Options[:interval]
+#   The time interval between each request. The execution will sleep at this point
+#   
+#   *. Options[:time_to_poll]
+#   For how long should the requests be made
+# 
 module Heartbeat
   class Check
-    def initialize(url, request = Request, options = {})
-      @request = request
-      @options = options
-      @url     = url
+    def initialize(url, options = {}, request = Request)
+      @url     = url      
+      @options = options || {}
+      @request = request || Request      
     end
 
     def pulse
